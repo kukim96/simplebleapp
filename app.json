@@ -1,5 +1,8 @@
 {
   "expo": {
+    "plugins": [
+      "@config-plugins/react-native-ble-plx"
+    ],
     "name": "simplebleapp",
     "slug": "simplebleapp",
     "version": "1.0.0",
@@ -17,13 +20,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tokudev.simplebleapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
