@@ -13,20 +13,6 @@ import Base64 from "Base64";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// const HomeScreen = ({ navigation }) => {
-//   return (
-//     <Button
-//       title="Go to Jane's profile"
-//       onPress={() =>
-//         navigation.navigate('Profile', { name: 'Jane' })
-//       }
-//     />
-//   );
-// };
-// const ProfileScreen = ({ navigation, route }) => {
-//   return <Text>This is {route.params.name}'s profile</Text>;
-// };
-
 const Stack = createNativeStackNavigator();
 
 const bleManager = new BleManager();
@@ -66,7 +52,7 @@ function scanAndConnect() {
           return device
             .readCharacteristicForService(
               "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
-              "9453DCAC-6A10-4D69-A63D-25F9DE27FC74".toLowerCase()
+              "AD51109D-ABCE-4927-9E2C-9ABBA5483FBD".toLowerCase()
             )
             .then((c) => {
               console.log("Characteristic: ", c);
@@ -76,25 +62,36 @@ function scanAndConnect() {
                 c.uuid,
                 Base64.atob(c.value)
               );
+              device.monitorCharacteristicForService(
+                c.serviceUUID,
+                c.uuid,
+                (error, c) => {
+                  if (error) {
+                    console.log("monitor error: ", error) 
+                  } else {
+                    console.log('base64 value: ', c.value)
+                  }
+                }
+              )
+              device.writeCharacteristicWithResponseForService(
+                c.serviceUUID,
+                c.uuid,
+                c.value
+              )
+              console.log('writing: ', c.value);
             })
         } else {
           return Promise.resolve();
         }
       })
-      .then(() => device.writeCharacteristicWithResponseForService(
-          "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
-          "9453DCAC-6A10-4D69-A63D-25F9DE27FC74".toLowerCase()
-      ))
-      .then(() => console.log('writing...'))
-      // .then(() => device.monitorCharacteristicForService(
-      //   "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
-      //   "9453DCAC-6A10-4D69-A63D-25F9DE27FC74".toLowerCase()
-      // ))
-      // .then(() => console.log('monitoring...'))
-      .then(() => device.cancelConnection())
-      .then(() => console.log("cancelling..."))
+      // .then(() => device.cancelConnection())
+      // .then(() => console.log("cancelling..."))
       .catch((err) => console.error("Error: ", err));
   });
+  setTimeout(() => {
+    console.log('Stop scanning...')
+    bleManager.stopDeviceScan();
+  }, 5000);
 }
 
 function HomeScreen({ navigation }) {
