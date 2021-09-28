@@ -63,23 +63,25 @@ function scanAndConnect() {
                 Base64.atob(c.value)
               );
               device.monitorCharacteristicForService(
-                c.serviceUUID,
-                c.uuid,
+                "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
+                "AD51109D-ABCE-4927-9E2C-9ABBA5483FBD".toLowerCase(),
                 (error, c) => {
                   if (error) {
-                    console.log("monitor error: ", error) 
+                    console.log("monitor error: ", error);
                   } else {
-                    console.log('base64 value: ', c.value)
+                    console.log(`value changed to ${Base64.atob(c.value)}!`);
                   }
                 }
-              )
+              );
+              const x = Base64.btoa("Alpha beta");
+              console.log("Writing...");
               device.writeCharacteristicWithResponseForService(
-                c.serviceUUID,
-                c.uuid,
-                c.value
-              )
-              console.log('writing: ', c.value);
-            })
+                "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
+                "AD51109D-ABCE-4927-9E2C-9ABBA5483FBD".toLowerCase(),
+                x
+              );
+              console.log("writing: ", c.value);
+            });
         } else {
           return Promise.resolve();
         }
@@ -89,7 +91,7 @@ function scanAndConnect() {
       .catch((err) => console.error("Error: ", err));
   });
   setTimeout(() => {
-    console.log('Stop scanning...')
+    console.log("Stop scanning...");
     bleManager.stopDeviceScan();
   }, 5000);
 }
