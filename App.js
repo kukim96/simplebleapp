@@ -78,7 +78,7 @@ function scanAndConnect() {
               device.writeCharacteristicWithResponseForService(
                 "205C9B28-FB91-46B3-9148-63DECF6FB2B9".toLowerCase(),
                 "AD51109D-ABCE-4927-9E2C-9ABBA5483FBD".toLowerCase(),
-                x
+                Base64.btoa("Time to build Toku Talk")
               );
               console.log("writing: ", c.value);
             });
